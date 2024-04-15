@@ -22,6 +22,17 @@ enum List[A]:
     case h :: t if pos > 0 => t.get(pos - 1)
     case _ => None
 
+  def backupGet(pos: Int): Option[A] = this match
+    case h :: t if pos == 0 => Some(h)
+    case h :: t if pos > 0 => t.backupGet(pos - 1)
+    case _ => None
+
+  /**
+   * Funzione che, data una lista di elementi calcola qualcosa partendo dal primo elemento, 
+   * arrivando alla coda, costruendo un qualcosa, che diventa all'ultima iterazione è il risultato. 
+   * Da sinistra verso destra calcolo il risultato. 
+   * 
+  */
   def foldLeft[B](init: B)(op: (B, A) => B): B = this match
     case h :: t => t.foldLeft(op(init, h))(op)
     case _ => init
@@ -30,13 +41,21 @@ enum List[A]:
     case h :: t => op(h, t.foldRight(init)(op))
     case _ => init
 
+  /**
+   * Per via dell'immutabilità è necessario partire dal fondo e costruire. E' non tail, e le ricorsioni non tail
+   * si costruiscono partendo dall'ultimo fino al prima.
+   * 
+   * Map, filter, ecc. richiedono la foldRight perché devo ricreare una nuova lista a partire da una in ingresso
+  */
   def append(list: List[A]): List[A] =
     foldRight(list)(_ :: _)
-
+    
   def flatMap[B](f: A => List[B]): List[B] =
     foldRight(Nil())(f(_) append _)
 
   def filter(predicate: A => Boolean): List[A] = flatMap(a => if predicate(a) then a :: Nil() else Nil())
+
+  def inverseFilter(predicate: A => Boolean): List[A] = flatMap(a => if !predicate(a) then a :: Nil() else Nil())
 
   def map[B](fun: A => B): List[B] = flatMap(a => fun(a) :: Nil())
 
@@ -45,12 +64,14 @@ enum List[A]:
     case h :: t => t.foldLeft(h)(op)
 
   // Exercise: implement the following methods
-  def zipWithValue[B](value: B): List[(A, B)] = ???
-  def length(): Int = ???
-  def zipWithIndex: List[(A, Int)] = ???
-  def partition(predicate: A => Boolean): (List[A], List[A]) = ???
+  def zipWithValue[B](v: B): List[(A, B)] = foldRight(Nil())((_, v) :: _)
+  def length(): Int = foldLeft(0)((b, _) => b + 1)
+  def zipWithIndex: List[(A, Int)] = foldRight(Nil())((a, b) => (a, this.length() - b.length() - 1) :: b)
+  def partition(predicate: A => Boolean): (List[A], List[A]) = (this.filter(predicate), this.inverseFilter(predicate))
   def span(predicate: A => Boolean): (List[A], List[A]) = ???
   def takeRight(n: Int): List[A] = ???
+  
+  
   def collect(predicate: PartialFunction[A, A]): List[A] = ???
 // Factories
 object List:
@@ -67,12 +88,14 @@ object Test extends App:
 
   import List.*
   val reference = List(1, 2, 3, 4)
+  println(reference.length())
   println(reference.zipWithValue(10)) // List((1, 10), (2, 10), (3, 10), (4, 10))
   println(reference.zipWithIndex) // List((1, 0), (2, 1), (3, 2), (4, 3))
   println(reference.partition(_ % 2 == 0)) // (List(2, 4), List(1, 3))
-  println(reference.span(_ % 2 != 0)) // (List(1), List(2, 3, 4))
-  println(reference.span(_ < 3)) // (List(1, 2), List(3, 4))
-  println(reference.reduce(_ + _)) // 10
-  println(List(10).reduce(_ + _)) // 10
+  println(reference.get(3))
+  //println(reference.span(_ % 2 != 0)) // (List(1), List(2, 3, 4))
+  // println(reference.span(_ < 3)) // (List(1, 2), List(3, 4))
+  // println(reference.reduce(_ + _)) // 10
+  // println(List(10).reduce(_ + _)) // 10
   println(reference.takeRight(3)) // List(2, 3, 4)
-  println(reference.collect { case x if x % 2 == 0 => x + 1 }) // List(3, 5)
+  // println(reference.collect { case x if x % 2 == 0 => x + 1 }) // List(3, 5)
