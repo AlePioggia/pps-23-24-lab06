@@ -69,7 +69,12 @@ enum List[A]:
   def zipWithIndex: List[(A, Int)] = foldRight(Nil())((a, b) => (a, this.length() - b.length() - 1) :: b)
   def partition(predicate: A => Boolean): (List[A], List[A]) = (this.filter(predicate), this.inverseFilter(predicate))
   def span(predicate: A => Boolean): (List[A], List[A]) = ???
-  def takeRight(n: Int): List[A] = ???
+  def takeRight(n: Int): List[A] = this match
+    case h :: t if n > 0 => takeRight(n - 1)
+    case h :: t if n == 0 => t 
+    case _ => Nil()
+  
+  
   
   
   def collect(predicate: PartialFunction[A, A]): List[A] = ???
