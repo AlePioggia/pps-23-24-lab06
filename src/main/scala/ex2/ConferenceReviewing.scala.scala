@@ -19,10 +19,11 @@ trait ConferenceReviewing:
 object ConferenceReviewing:
     def apply(): ConferenceReviewing = new ConferenceReviewingImpl()
     private case class ConferenceReviewingImpl() extends ConferenceReviewing:
-        private val reviews: List[(Int, Map[Question, Int])] = List()
-
-        override def loadReview(article: Int, scores: Map[Question, Int]): Unit = ??? 
-        override def orderedScores(article: Int, question: Question): List[Int] = ???
+        private var reviews: List[(Int, Map[Question, Int])] = List()
+        override def loadReview(article: Int, scores: Map[Question, Int]): Unit =
+            reviews = reviews :+ (article, scores)
+        override def orderedScores(article: Int, question: Question): List[Int] = 
+            reviews.collect({case p if p._1 eq article => p._2.get(question)}).flatten.sorted
         override def sortedAcceptedArticles(): List[(Int, Double)] = ???
         override def averageFinalScore(article: Int): Double = ???
         override def acceptedArticles(): Set[Int] = ???
