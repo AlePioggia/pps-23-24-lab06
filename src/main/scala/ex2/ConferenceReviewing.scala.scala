@@ -1,5 +1,6 @@
 package ex2
 import scala.collection.*
+import scala.compiletime.ops.boolean
 
 enum Question:
     case RELEVANCE
@@ -27,7 +28,13 @@ object ConferenceReviewing:
         override def sortedAcceptedArticles(): List[(Int, Double)] = ???
         override def averageFinalScore(article: Int): Double =
             reviews.collect({case p if p._1 == article => p._2.get(Question.FINAL)}).average.getOrElse(Double.NaN)
-        override def acceptedArticles(): Set[Int] = ???
+        override def acceptedArticles(): Set[Int] = 
+            reviews.map(_._1).collect({case x if accepted(x) => x}).distinct.toSet
+        private def accepted(article: Int): Boolean = reviews.collect {
+            case (x, y) if x == article =>
+                y.collect {
+            case (question, value) if question == Question.RELEVANCE && value >= 8 =>value
+        }}.flatten.nonEmpty
         override def averageWeightedFinalScoreMap(): Map[Int, Double] = ???
         override def loadReview(article: Int, relevance: Int, significance: Int, confidence: Int): Unit = ???
 
