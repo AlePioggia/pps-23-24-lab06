@@ -1,15 +1,15 @@
 package ex2
 
+import org.junit.*
 import org.junit.Assert.*
-import org.junit.Test
 import scala.collection.mutable.HashMap
 
 class ConferenceReviewingTest:
   var cr: ConferenceReviewing = _
 
-  @org.junit.Before
+  @Before
   def init(): Unit =
-    cr = new ConferenceReviewingImpl()
+    cr = ConferenceReviewing()
     cr.loadReview(1, Map(Question.RELEVANCE -> 8, Question.SIGNIFICANCE -> 8, Question.CONFIDENCE -> 6, Question.FINAL -> 8))
     cr.loadReview(1, Map(Question.RELEVANCE -> 9, Question.SIGNIFICANCE -> 9, Question.CONFIDENCE -> 6, Question.FINAL -> 9))
     cr.loadReview(2, Map(Question.RELEVANCE -> 9, Question.SIGNIFICANCE -> 9, Question.CONFIDENCE -> 10, Question.FINAL -> 9))
