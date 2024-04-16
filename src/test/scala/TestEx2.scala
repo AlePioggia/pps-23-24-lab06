@@ -10,17 +10,17 @@ class ConferenceReviewingTest:
   @Before
   def init(): Unit =
     cr = ConferenceReviewing()
-    cr.loadReview(1, Map(Question.RELEVANCE -> 8, Question.SIGNIFICANCE -> 8, Question.CONFIDENCE -> 6, Question.FINAL -> 8))
-    cr.loadReview(1, Map(Question.RELEVANCE -> 9, Question.SIGNIFICANCE -> 9, Question.CONFIDENCE -> 6, Question.FINAL -> 9))
-    cr.loadReview(2, Map(Question.RELEVANCE -> 9, Question.SIGNIFICANCE -> 9, Question.CONFIDENCE -> 10, Question.FINAL -> 9))
-    cr.loadReview(2, Map(Question.RELEVANCE -> 4, Question.SIGNIFICANCE -> 6, Question.CONFIDENCE -> 10, Question.FINAL -> 6))
-    cr.loadReview(3, Map(Question.RELEVANCE -> 3, Question.SIGNIFICANCE -> 3, Question.CONFIDENCE -> 3, Question.FINAL -> 3))
-    cr.loadReview(3, Map(Question.RELEVANCE -> 4, Question.SIGNIFICANCE -> 4, Question.CONFIDENCE -> 4, Question.FINAL -> 4))
-    cr.loadReview(4, Map(Question.RELEVANCE -> 6, Question.SIGNIFICANCE -> 6, Question.CONFIDENCE -> 6, Question.FINAL -> 6))
-    cr.loadReview(4, Map(Question.RELEVANCE -> 7, Question.SIGNIFICANCE -> 7, Question.CONFIDENCE -> 8, Question.FINAL -> 7))
-    cr.loadReview(4, Map(Question.RELEVANCE -> 8, Question.SIGNIFICANCE -> 8, Question.CONFIDENCE -> 7, Question.FINAL -> 8))
-    cr.loadReview(5, Map(Question.RELEVANCE -> 6, Question.SIGNIFICANCE -> 6, Question.CONFIDENCE -> 6, Question.FINAL -> 10))
-    cr.loadReview(5, Map(Question.RELEVANCE -> 7, Question.SIGNIFICANCE -> 7, Question.CONFIDENCE -> 7, Question.FINAL -> 10))
+    cr.:+(1, Map(Question.RELEVANCE -> 8, Question.SIGNIFICANCE -> 8, Question.CONFIDENCE -> 6, Question.FINAL -> 8))
+    cr.:+(1, Map(Question.RELEVANCE -> 9, Question.SIGNIFICANCE -> 9, Question.CONFIDENCE -> 6, Question.FINAL -> 9))
+    cr.:+(2, Map(Question.RELEVANCE -> 9, Question.SIGNIFICANCE -> 9, Question.CONFIDENCE -> 10, Question.FINAL -> 9))
+    cr.:+(2, Map(Question.RELEVANCE -> 4, Question.SIGNIFICANCE -> 6, Question.CONFIDENCE -> 10, Question.FINAL -> 6))
+    cr.:+(3, Map(Question.RELEVANCE -> 3, Question.SIGNIFICANCE -> 3, Question.CONFIDENCE -> 3, Question.FINAL -> 3))
+    cr.:+(3, Map(Question.RELEVANCE -> 4, Question.SIGNIFICANCE -> 4, Question.CONFIDENCE -> 4, Question.FINAL -> 4))
+    cr.:+(4, Map(Question.RELEVANCE -> 6, Question.SIGNIFICANCE -> 6, Question.CONFIDENCE -> 6, Question.FINAL -> 6))
+    cr.:+(4, Map(Question.RELEVANCE -> 7, Question.SIGNIFICANCE -> 7, Question.CONFIDENCE -> 8, Question.FINAL -> 7))
+    cr.:+(4, Map(Question.RELEVANCE -> 8, Question.SIGNIFICANCE -> 8, Question.CONFIDENCE -> 7, Question.FINAL -> 8))
+    cr.:+(5, Map(Question.RELEVANCE -> 6, Question.SIGNIFICANCE -> 6, Question.CONFIDENCE -> 6, Question.FINAL -> 10))
+    cr.:+(5, Map(Question.RELEVANCE -> 7, Question.SIGNIFICANCE -> 7, Question.CONFIDENCE -> 7, Question.FINAL -> 10))
 
   @Test
   def testOrderedScores(): Unit =
