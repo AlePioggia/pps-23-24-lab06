@@ -31,11 +31,9 @@ enum List[A]:
     case h :: t => op(h, t.foldRight(init)(op))
     case _ => init
 
-  def append(list: List[A]): List[A] =
-    foldRight(list)(_ :: _)
+  def append(list: List[A]): List[A] = foldRight(list)(_ :: _)
     
-  def flatMap[B](f: A => List[B]): List[B] =
-    foldRight(Nil())(f(_) append _)
+  def flatMap[B](f: A => List[B]): List[B] = foldRight(Nil())(f(_) append _)
 
   def filter(predicate: A => Boolean): List[A] = flatMap(a => if predicate(a) then a :: Nil() else Nil())
 
@@ -52,7 +50,7 @@ enum List[A]:
   def take(n: Int): List[A] = this match
     case h :: t if n > 0 => h :: t.take(n - 1)
     case _ => Nil()
-  
+
   def zipWithValue[B](v: B): List[(A, B)] = foldRight(Nil())((_, v) :: _)
 
   def length(): Int = foldLeft(0)((b, _) => b + 1)
