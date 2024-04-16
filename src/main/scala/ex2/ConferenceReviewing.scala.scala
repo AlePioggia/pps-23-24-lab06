@@ -20,7 +20,10 @@ trait ConferenceReviewing:
 object ConferenceReviewing:
     def apply(): ConferenceReviewing = new ConferenceReviewingImpl()
     private case class ConferenceReviewingImpl() extends ConferenceReviewing:
+        import ImplementationHelpers.*
+
         private var reviews: List[(Int, Map[Question, Int])] = List()
+        
         override def loadReview(article: Int, scores: Map[Question, Int]): Unit =
             reviews = reviews :+ (article, scores)
         override def orderedScores(article: Int, question: Question): List[Int] = 
@@ -30,13 +33,15 @@ object ConferenceReviewing:
             reviews.collect({case p if p._1 == article => p._2.get(Question.FINAL)}).average.getOrElse(Double.NaN)
         override def acceptedArticles(): Set[Int] = 
             reviews.map(_._1).collect({case x if accepted(x) => x}).distinct.toSet
-        private def accepted(article: Int): Boolean = reviews.collect {
-            case (x, y) if x == article =>
-                y.collect {
-            case (question, value) if question == Question.RELEVANCE && value >= 8 =>value
-        }}.flatten.nonEmpty
         override def averageWeightedFinalScoreMap(): Map[Int, Double] = ???
         override def loadReview(article: Int, relevance: Int, significance: Int, confidence: Int): Unit = ???
+
+        private object ImplementationHelpers:
+            def accepted(article: Int): Boolean = reviews.collect {
+                case (x, y) if x == article =>
+                    y.collect {
+                case (question, value) if question == Question.RELEVANCE && value >= 8 => value
+            }}.flatten.nonEmpty
 
     
 
