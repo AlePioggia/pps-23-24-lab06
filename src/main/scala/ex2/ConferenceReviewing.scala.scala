@@ -35,6 +35,7 @@ object ConferenceReviewing:
         private object ImplementationHelpers:
             import ListExtensions.*
 
-            def accepted(a: Int): Boolean = revs.collect({case (x, y) if x == a => y.collect({ case (q, v) if q == Question.RELEVANCE && v >= 8 => v})}).flatten.nonEmpty
+            def accepted(a: Int): Boolean = 
+                revs.collect({case (x, y) if x == a => y.collect({ case (q, v) if q == Question.RELEVANCE && v >= 8 => v})}).flatten.nonEmpty
             def averageWeightedFinalScore(revs: List[(Int, Map[Question, Int])], a: Int): Double = 
                 revs.collect({case p if p._1 == a => p._2.get(Question.FINAL).get * p._2.get(Question.CONFIDENCE).get / 10.0}).map((e) => Option(e)).average.get
