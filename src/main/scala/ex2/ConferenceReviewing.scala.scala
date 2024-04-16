@@ -30,7 +30,7 @@ object ConferenceReviewing:
         override def sortedAcceptedArticles(): List[(Int, Double)] = acceptedArticles().map((e) => (e, averageFinalScore(e))).toList.sortBy(_._2)
         override def averageFinalScore(a: Int): Double = revs.collect({case p if p._1 == a => p._2.get(Question.FINAL)}).average.get
         override def acceptedArticles(): Set[Int] = revs.map(_._1).collect({case x if accepted(x) => x}).distinct.toSet
-        override def averageWeightedFinalScoreMap(): Map[Int, Double] = revs.map({ case (a, _) => a -> averageWeightedFinalScore(revs, a)}).toMap
+        override def averageWeightedFinalScoreMap(): Map[Int, Double] = revs.map({case (a, _) => a -> averageWeightedFinalScore(revs, a)}).toMap
 
         private object ImplementationHelpers:
             import ListExtensions.*
