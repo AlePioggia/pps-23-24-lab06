@@ -13,6 +13,7 @@ enum List[A]:
   def tail: Option[List[A]] = this match
     case h :: t => Some(t)
     case _ => None
+    
   def foreach(consumer: A => Unit): Unit = this match
     case h :: t => consumer(h); t.foreach(consumer)
     case _ =>
@@ -22,12 +23,6 @@ enum List[A]:
     case h :: t if pos > 0 => t.get(pos - 1)
     case _ => None
 
-  /**
-   * Funzione che, data una lista di elementi calcola qualcosa partendo dal primo elemento, 
-   * arrivando alla coda, costruendo un qualcosa, che diventa all'ultima iterazione è il risultato. 
-   * Da sinistra verso destra calcolo il risultato. 
-   * 
-  */
   def foldLeft[B](init: B)(op: (B, A) => B): B = this match
     case h :: t => t.foldLeft(op(init, h))(op)
     case _ => init
@@ -36,12 +31,6 @@ enum List[A]:
     case h :: t => op(h, t.foldRight(init)(op))
     case _ => init
 
-  /**
-   * Per via dell'immutabilità è necessario partire dal fondo e costruire. E' non tail, e le ricorsioni non tail
-   * si costruiscono partendo dall'ultimo fino al prima.
-   * 
-   * Map, filter, ecc. richiedono la foldRight perché devo ricreare una nuova lista a partire da una in ingresso
-  */
   def append(list: List[A]): List[A] =
     foldRight(list)(_ :: _)
     
@@ -63,14 +52,19 @@ enum List[A]:
   def take(n: Int): List[A] = this match
     case h :: t if n > 0 => h :: t.take(n - 1)
     case _ => Nil()
-
-  // Exercise: implement the following methods
+  
   def zipWithValue[B](v: B): List[(A, B)] = foldRight(Nil())((_, v) :: _)
+
   def length(): Int = foldLeft(0)((b, _) => b + 1)
+  
   def zipWithIndex: List[(A, Int)] = foldRight(Nil())((a, b) => (a, this.length() - b.length() - 1) :: b)
+  
   def partition(predicate: A => Boolean): (List[A], List[A]) = (this.filter(predicate), this.filter(!predicate(_)))
+  
   def span(predicate: A => Boolean): (List[A], List[A]) = {val l = leftSpan(predicate); (l, takeRight(this.length() - l.length()))}
+  
   def takeRight(n: Int) = this.reverse().take(n).reverse()
+  
   def collect(predicate: PartialFunction[A, A]): List[A] = flatMap((a) => if predicate.isDefinedAt(a) then predicate(a) :: Nil() else Nil())
 // Factories
 object List:
