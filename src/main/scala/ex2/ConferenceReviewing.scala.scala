@@ -1,6 +1,6 @@
 package ex2
 import scala.collection.*
-import scala.compiletime.ops.boolean
+import ex2.ListExtensions.ListOptionExtensions
 
 enum Question:
     case RELEVANCE
@@ -33,18 +33,16 @@ object ConferenceReviewing:
             reviews.collect({case p if p._1 == article => p._2.get(Question.FINAL)}).average.get
         override def acceptedArticles(): Set[Int] = 
             reviews.map(_._1).collect({case x if accepted(x) => x}).distinct.toSet
-        override def averageWeightedFinalScoreMap(): Map[Int, Double] = ???
+        override def averageWeightedFinalScoreMap(): Map[Int, Double] =
+            reviews.map { case (article, _) => article -> averageWeightedFinalScore(reviews, article) }.toMap
 
         private object ImplementationHelpers:
+            import ListExtensions.*
+
             def accepted(article: Int): Boolean = reviews.collect {
                 case (x, y) if x == article =>
                     y.collect {
                 case (question, value) if question == Question.RELEVANCE && value >= 8 => value
             }}.flatten.nonEmpty
-
-    
-
-
-
-
-
+            def averageWeightedFinalScore(reviews: List[(Int, Map[Question, Int])], article: Int): Double = 
+                reviews.collect({case p if p._1 == article => p._2.get(Question.FINAL).get * p._2.get(Question.CONFIDENCE).get / 10.0}).map((e) => Option(e)).average.get

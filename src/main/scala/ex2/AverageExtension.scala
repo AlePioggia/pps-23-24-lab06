@@ -1,15 +1,16 @@
 package ex2
     
-implicit class ListExtensions(list: List[Option[Int]]):
-  def average: Option[Double] = 
-    val validScores = list.flatten
-    if (validScores.isEmpty) None
-    else Some(validScores.sum.toDouble / validScores.length)
+import scala.math.Numeric.Implicits._
 
 object ListExtensions:
-  implicit class ListOptionExtensions(list: List[Option[Int]]) {
-    def average: Option[Double] = 
-      val validScores = list.flatten
-      if (validScores.isEmpty) None
-      else Some(validScores.sum.toDouble / validScores.length)
-  }
+    implicit class ListOptionExtensions[T: Numeric](list: List[Option[T]]) {
+    def average: Option[Double] = {
+        val validScores = list.flatten
+        if (validScores.isEmpty) None
+        else Some(validScores.sum.toDouble / validScores.length)
+    }
+}
+
+
+
+  
